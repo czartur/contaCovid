@@ -20,17 +20,22 @@ public:
 class node{
 private:
     info* dados;
+public:
     node** sub;
     int subn, dadosn;
-public:
     int id;
-    node(): dados{nullptr}, sub{nullptr}, sub{0}, dadosn{0} {}
+    node(int n_id): dados{nullptr}, sub{nullptr}, subn{0}, dadosn{0}, id{n_id} {
+        dados = nullptr;
+        sub = nullptr;
+    }
 
-    int total(int inicio, int fim){
+    info total(int inicio, int fim){
         return dados[fim] - dados[inicio-1];
     }
-    double media(int dia, int janela){
-        return (double) (dados[dia]-dados[dia-janela])/((double)janela);
+    info media(int dia, int janela){
+        int casos = (double) (dados[dia].casos-dados[dia-janela].casos)/((double)janela);
+        int obitos = (double) (dados[dia].obitos-dados[dia-janela].obitos)/((double)janela);
+        return info(casos, obitos);
     }
 
     void addsub(node* novo){
@@ -45,9 +50,9 @@ public:
 };
 
 node* search(int id, node* cur){
-    if(cur.id == id) return cur;
-    for(int i=0; i<subn; i++){
-        node* aux = search(id, sub[i]);
+    if(cur->id == id) return cur;
+    for(int i=0; i<cur->subn; i++){
+        node* aux = search(id, cur->sub[i]);
         if(aux) return aux;
     }
     return nullptr;
