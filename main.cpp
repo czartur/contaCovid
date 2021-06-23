@@ -11,8 +11,8 @@ public:
     int casos, obitos;
     info(int n_casos=0, int n_obitos=0)
         : casos{n_casos}, obitos{n_obitos} {}
-    friend info operator+=(const info& i1, const info& i2){
-        return info(i1.casos+i2.casos, i1.obitos+i2.obitos); 
+    friend info operator+=(info& i1, const info& i2){
+        return info(i1.casos+=i2.casos, i1.obitos+=i2.obitos); 
     }
     friend info operator-(const info& i1, const info& i2){
         return info(i1.casos-i2.casos, i1.obitos-i2.obitos);
@@ -51,15 +51,6 @@ public:
     //falta ver tendencia de crescimento
 };
 
-node* search(string name, node* cur){
-    if(cur->name == name) return cur;
-    for(int i=0; i<cur->sub.size(); i++){
-        node* aux = search(name, cur->sub[i]);
-        if(aux) return aux;
-    }
-    return nullptr;
-}
-
 vector <string> splitline(string& line){
     vector <string> ans(1);
     int i=0;
@@ -82,6 +73,15 @@ int toINT(string &number){
     return ans;
 }
 
+node* search(string name, node* cur){
+    if(cur->name == name) return cur;
+    for(int i=0; i<cur->sub.size(); i++){
+        node* aux = search(name, cur->sub[i]);
+        if(aux) return aux;
+    }
+    return nullptr;
+}
+
 int main(){
     enum Col {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q};
     int idn = 0;
@@ -90,8 +90,6 @@ int main(){
     if(!file.is_open()){
         return cout << "Problema na arbetura do arquivo..." << endl, 1;
     }
-
-
     string line;
     getline(file, line); // read the header
     vector <string> splited;
@@ -99,20 +97,12 @@ int main(){
     node* pais = new node("Brasil");
     node* estado = nullptr;
     node* municipio = nullptr;
-    // vector<node*> sub;
-    // void addsub(node* novo){ sub.push_back(novo); }
-    int curline = 0;
-    int tag=0;
     while(getline(file, line)){
-        //cout << ++curline << endl;
         splited = splitline(line);
-        if(splited[B].empty() || splited[C].empty()) continue;
+        if(splited[E].empty()) continue;
+        if(splited[C].empty()) splited[C] = "Outras";
         if((estado == nullptr) || (estado!=nullptr)&&(estado->name != splited[B])){
-            if(estado){
-                cout << estadon << ": " << estado->name << " " << estado->sub.size() << endl;
-                estado->fix();
-                cout << estado->dados[0]
-            }
+            if(estado) estado->fix();
             pais->addsub(new node(splited[B]));
             estado = pais->sub[estadon++];
             municipion=0;
@@ -124,6 +114,6 @@ int main(){
         info novo_dado(toINT(splited[K]), toINT(splited[M]));
         municipio->adddados(novo_dado); 
     }
+    estado->fix();
     pais->fix();
-    cout << pais->dados[0].casos << endl;
-} 
+}
