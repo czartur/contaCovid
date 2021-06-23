@@ -1,6 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <vector>
 #include <map>
+
 using namespace std;
 
 
@@ -33,11 +36,11 @@ public:
         return dados[fim] - dados[inicio-1];
     }
     info media(int dia, int janela){
-        int casos = (double) (dados[dia].casos-dados[dia-janela].casos)/((double)janela);
-        int obitos = (double) (dados[dia].obitos-dados[dia-janela].obitos)/((double)janela);
+        double casos = (double) (dados[dia].casos-dados[dia-janela].casos)/((double)janela);
+        double obitos = (double) (dados[dia].obitos-dados[dia-janela].obitos)/((double)janela);
         return info(casos, obitos);
     }
-
+    
     void addsub(node* novo){
         sub = new node* [subn+1];
         sub[subn++] = novo;
@@ -58,7 +61,34 @@ node* search(int id, node* cur){
     return nullptr;
 }
 
+vector <string> divide_line(string& line){
+    vector <string> ans(1);
+    "brasil", "RO", "Boa Visto"
+    int i=0;
+    for(auto p: line){
+        if(p == ';') {
+            ans.resize(++i + 1);
+            continue;
+        }
+        ans[i].push_back(p);
+    }
+    return ans;
+}
+
 int main(){
-    map<string, int> mid;
+    map<string, int> mid; 
     node* brasil = nullptr;
+
+    ifstream file ("data.csv");
+    if(!file.is_open()){
+        return cout << "Problema na arbetura do arquivo..." << endl, 1;
+    }
+    string line;
+    vector <string> dividida;
+    while(getline(file, line)){
+        dividida = divide_line(line);
+    }
+    for(auto p: dividida){
+        cout << p << endl;
+    }
 } 
