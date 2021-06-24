@@ -2,55 +2,9 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <map>
-
+#include "menu.h"
 using namespace std;
-
-class info{
-public:
-    int casos, obitos;
-    info(int n_casos=0, int n_obitos=0)
-        : casos{n_casos}, obitos{n_obitos} {}
-    friend info operator+=(info& i1, const info& i2){
-        return info(i1.casos+=i2.casos, i1.obitos+=i2.obitos); 
-    }
-    friend info operator-(const info& i1, const info& i2){
-        return info(i1.casos-i2.casos, i1.obitos-i2.obitos);
-    }
-};
-
-class node{
-public:
-    vector <info> dados;
-    vector <node*> sub;
-    string name;
-    node(string n_name): name{n_name} {}
-
-    info total(int inicio, int fim){
-        return dados[fim] - dados[inicio-1];
-    }
-    info media(int dia, int janela){
-        double casos = (double) (dados[dia].casos-dados[dia-janela].casos)/((double)janela);
-        double obitos = (double) (dados[dia].obitos-dados[dia-janela].obitos)/((double)janela);
-        return info(casos, obitos);
-    }
-    
-    void addsub(node* novo){ sub.push_back(novo); }
-    void adddados(info &novo){ dados.push_back(novo); }
-
-    void fix(){
-        for(auto f:sub){
-            for(int i=0; i<f->dados.size(); i++){
-                if((int)dados.size()-1 < i) dados.push_back(f->dados[i]);
-                else {
-                    dados[i]+=f->dados[i];
-                }
-            }
-        }
-    }
-    //falta ver tendencia de crescimento
-};
-
+const int inf = 0x3f3f3f3f;
 vector <string> splitline(string& line){
     vector <string> ans(1);
     int i=0;
@@ -64,28 +18,70 @@ vector <string> splitline(string& line){
     return ans;
 }
 
-int toINT(string &number){
+int strTOint(string &number){
     int ans=0, pdez=1;
     for(int i=number.size(); i--; i>=0){
+        if(number[i]<'0' || number[i]>'9') return -1;
         ans+=(number[i]-'0')*pdez;
         pdez*=10;
     }
     return ans;
 }
-
-node* search(string name, node* cur){
-    if(cur->name == name) return cur;
-    for(int i=0; i<cur->sub.size(); i++){
-        node* aux = search(name, cur->sub[i]);
-        if(aux) return aux;
-    }
-    return nullptr;
+int dateTOint(string &date){
+    int moisize[13]={0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    for(int i=1; i<13; i++) moisize[i]+=moisize[i-1];
+    int raw = strTOint(date);
+    if(raw == -1 || date.size()!= 4) return -1;
+    int mois = raw%100, jour = raw/100;
+    if(mois<=0 || mois> 12 || jour<=0 ||(mois>0 && mois<=12 && jour>moisize[mois]-moisize[mois-1])) return -1;
+    return jour + moisize[mois-1];
 }
 
+//PAREI AQUI
+info inp_total(node* local){
+    string inp;
+    int inicio, fim;
+    cout << "Data de inicio [DDMM]: ";
+    cin >> inp;
+    inicio = dateTOint(inp);
+    cout << "Data de fim [DDMM]: ";
+    cin >> inp;
+    fim = dateTOint(inp);
+    cout << inicio << " " << fim << endl;
+    if(inicio==-1 || fim==-1 || fim<inicio || fim>local->dados.size()) return info(-1,inf);
+    return local->total(inicio, fim);
+}
+info inp_media(node* local){
+    string inp;
+    int dia, janela;
+    cout << "Data [DDMM]: ";
+    cin >> inp;
+    dia = dateTOint(inp);
+    cout << "Janela [numero]: ";
+    cin >> inp;
+    janela = strTOint(inp);
+    if(janela==-1 || janela==0 || dia-janela+1 <= 0 || dia>local->dados.size()) return info(-1,inf);
+    return local->media(dia, janela);
+}
+info inp_tendencia(node* local){
+    string inp;
+    int inicio, fim, janela;
+    cout << "Data posterior [DDMM]: ";
+    cin >> inp;
+    fim = dateTOint(inp);
+    cout << "Data anterior [DDMM]: ";
+    cin >> inp;
+    inicio = dateTOint(inp);
+    cout << "Janela [numero]: ";
+    cin >> inp;
+    janela = strTOint(inp);
+    if(janela==-1 || janela==0 || fim<inicio || inicio-janela+1 <=0 || fim>local->dados.size()) return info(-1,inf);
+    return local->tendencia(inicio, fim, janela);
+}
 int main(){
+    node* pais = new node("Brasil");
+    // FETCH DATA
     enum Col {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q};
-    int idn = 0;
-    map<string, int> mid;
     ifstream file ("data.csv");
     if(!file.is_open()){
         return cout << "Problema na arbetura do arquivo..." << endl, 1;
@@ -94,12 +90,11 @@ int main(){
     getline(file, line); // read the header
     vector <string> splited;
     int estadon=0, municipion=0;
-    node* pais = new node("Brasil");
     node* estado = nullptr;
     node* municipio = nullptr;
     while(getline(file, line)){
         splited = splitline(line);
-        if(splited[E].empty()) continue;
+        if(splited[E].empty()) continue; //dados irrelevantes ou redundantes possuem a coluna E vazia
         if(splited[C].empty()) splited[C] = "Outras";
         if((estado == nullptr) || (estado!=nullptr)&&(estado->name != splited[B])){
             if(estado) estado->fix();
@@ -111,9 +106,82 @@ int main(){
             estado->addsub(new node(splited[C]));
             municipio = estado->sub[municipion++];
         }
-        info novo_dado(toINT(splited[K]), toINT(splited[M]));
-        municipio->adddados(novo_dado); 
-    }
+        info novo_dado(strTOint(splited[K]), strTOint(splited[M]));
+        municipio->adddados(novo_dado);
+    } 
     estado->fix();
     pais->fix();
+
+    //MENU
+    pLevel m0("### Covid-19 (database) ###\n");
+    sLevel m1(vector<string>({"0. Voltar", "1. Total", "2. Média móvel", "3. Tendência"}));
+    tLevel m2(vector<info(*)(node*)>({inp_total, inp_media, inp_tendencia}));
+    m0.flow(pais, m1, m2);
+
+    /*for(auto p:pais->sub[0]->sub){
+        cout << p->name << endl;
+    }*/
 }
+
+// # Menu 0
+// Escolher um local (ou sair)
+
+//# Menu 1
+// 0. voltar
+// 1. total de casos
+// 2. media movel
+// 3. tedencia 
+
+//# Menu 2.1 
+// Escoher 2 datas (ou voltar)
+// --> resultado
+
+//# Menu 2.2
+// Escolher 1 data e 1 janela (ou voltar)
+// --> resultado
+
+//# Menu 2.3
+// Escolher 2 datas e 1 janela (ou voltar)
+// --> resultado
+
+//MENU NAIVE
+    /*
+    string local;
+    do{
+        system("clear");
+        cout << "### Covid-19 (online database) ###\n" << endl;
+        cout << "Escolha o local (0 para sair): ";
+        cin >> local;
+        if(local == "0") continue;
+        node* cur = search(local, pais);
+        if(cur == nullptr) cout << "local não encontrado..." << endl;
+        else{
+            int choice;
+            do{
+                system("clear");
+                cout << ">> " << cur->name << " <<\n\n";
+                cout << "0. Voltar\n";
+                cout << "1. Total de casos\n";
+                cout << "2. Media movel\n";
+                cout << "3. Tendencia de crescimento\n" << endl;
+                cin >> choice;
+                switch (choice) 
+                {
+                case 1:
+                    cout << "opção 1" << endl;
+                    break;
+                case 2:
+                    cout << "opção 2" << endl;
+                    break;
+                case 3:
+                    cout << "opção 3" << endl;
+                    break;
+                default:
+                    break;
+                }
+                pausa(2);
+            }while(choice!=0);
+        }
+        pausa(1);
+    }while(local!="0");
+    */
