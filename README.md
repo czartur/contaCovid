@@ -2,7 +2,6 @@
 
 
 ## PROBLEMAS:
-* Local não encontrado (s não funciona)
 * Formatar as saídas numéricas
 * Explicar o que é "Local" e o formato de input
 * Explicar os inputs permitidos (com os constraints)
