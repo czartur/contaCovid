@@ -12,7 +12,7 @@ public:
     vector <node*> sub;
     string name;
     node(string n_name): name{n_name} {}
-    
+    ~node(){ for(auto p:sub) delete p; }
     info total(int inicio, int fim){
         fim--, inicio--;
         return dados[fim] - dados[inicio-1];
