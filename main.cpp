@@ -125,7 +125,7 @@ int main(){
     m0.flow(pais, m1, m2);
 }
 
-//naive menus
+//naive menu
     /*
     string local;
     do{

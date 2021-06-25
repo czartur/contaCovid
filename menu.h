@@ -82,7 +82,7 @@ public:
         do{
             display();
             cout << "[0] para sair\nLocal: "; 
-            cin >> inp;
+            getline(cin, inp);
             node* local = search(inp, head); 
             if(local) {
                 m2.header = ">> " + local->name + " <<";
