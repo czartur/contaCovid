@@ -124,7 +124,6 @@ int main(){
     tLevel m2(vector<info(*)(node*)>({inp_total, inp_media, inp_tendencia}));
     m0.flow(pais, m1, m2);
 }
-
 //naive menu
     /*
     string local;
