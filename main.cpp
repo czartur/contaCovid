@@ -47,7 +47,7 @@ info inp_total(node* local){
     cout << "Data de fim [DDMM]: ";
     cin >> inp;
     fim = dateTOint(inp);
-    cout << inicio << " " << fim << endl;
+    //cout << inicio << " " << fim << endl;
     if(inicio==-1 || fim==-1 || fim<inicio || fim>local->dados.size()) return info(-1,inf);
     return local->total(inicio, fim);
 }
@@ -123,6 +123,8 @@ int main(){
     sLevel m1(vector<string>({"0. Voltar", "1. Total", "2. Média móvel", "3. Tendência"}));
     tLevel m2(vector<info(*)(node*)>({inp_total, inp_media, inp_tendencia}));
     m0.flow(pais, m1, m2);
+
+    delete pais;
 }
 //naive menu
     /*

@@ -63,7 +63,11 @@ public:
             string subheader[3] = {"Total", "Media", "Tendencia"}; 
             display();
             cin >> inp;
-            if(inp == 0) break;
+            if(inp == 0) {
+                fflush(stdin);
+                getc(stdin);
+                break;
+            }
             else if(inp > 3 || inp<0) cout << "Invalid option! " << endl;
             else {
                 m3.header = ">> " + local->name + " (" + subheader[inp-1] + ") <<";
