@@ -4,7 +4,8 @@
 #include <vector>
 #include "menu.h"
 using namespace std;
-const int inf = 0x3f3f3f3f;
+
+//miscellaneous
 vector <string> splitline(string& line){
     vector <string> ans(1);
     int i=0;
@@ -17,7 +18,6 @@ vector <string> splitline(string& line){
     }
     return ans;
 }
-
 int strTOint(string &number){
     int ans=0, pdez=1;
     for(int i=number.size(); i--; i>=0){
@@ -37,7 +37,7 @@ int dateTOint(string &date){
     return jour + moisize[mois-1];
 }
 
-//PAREI AQUI
+//third level menu functions
 info inp_total(node* local){
     string inp;
     int inicio, fim;
@@ -78,9 +78,9 @@ info inp_tendencia(node* local){
     if(janela==-1 || janela==0 || fim<inicio || inicio-janela+1 <=0 || fim>local->dados.size()) return info(-1,inf);
     return local->tendencia(inicio, fim, janela);
 }
-int main(){
-    node* pais = new node("Brasil");
-    // FETCH DATA
+
+//read csv file
+bool fetchData(node** pais){
     enum Col {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q};
     ifstream file ("data.csv");
     if(!file.is_open()){
@@ -98,8 +98,8 @@ int main(){
         if(splited[C].empty()) splited[C] = "Outras";
         if((estado == nullptr) || (estado!=nullptr)&&(estado->name != splited[B])){
             if(estado) estado->fix();
-            pais->addsub(new node(splited[B]));
-            estado = pais->sub[estadon++];
+            (*pais)->addsub(new node(splited[B]));
+            estado = (*pais)->sub[estadon++];
             municipion=0;
         }
         if((municipio == nullptr) || (municipio!=nullptr)&&(municipio->name != splited[C])){
@@ -110,41 +110,22 @@ int main(){
         municipio->adddados(novo_dado);
     } 
     estado->fix();
-    pais->fix();
+    (*pais)->fix();
+    file.close();
+    return 0;
+}
 
-    //MENU
+int main(){
+    node* pais = new node("Brasil");
+    if(fetchData(&pais)) return 1;
+
     pLevel m0("### Covid-19 (database) ###\n");
     sLevel m1(vector<string>({"0. Voltar", "1. Total", "2. Média móvel", "3. Tendência"}));
     tLevel m2(vector<info(*)(node*)>({inp_total, inp_media, inp_tendencia}));
     m0.flow(pais, m1, m2);
-
-    /*for(auto p:pais->sub[0]->sub){
-        cout << p->name << endl;
-    }*/
 }
 
-// # Menu 0
-// Escolher um local (ou sair)
-
-//# Menu 1
-// 0. voltar
-// 1. total de casos
-// 2. media movel
-// 3. tedencia 
-
-//# Menu 2.1 
-// Escoher 2 datas (ou voltar)
-// --> resultado
-
-//# Menu 2.2
-// Escolher 1 data e 1 janela (ou voltar)
-// --> resultado
-
-//# Menu 2.3
-// Escolher 2 datas e 1 janela (ou voltar)
-// --> resultado
-
-//MENU NAIVE
+//naive menus
     /*
     string local;
     do{

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include "node.h"
@@ -6,7 +7,7 @@ using namespace std;
 
 #ifndef MENU_H
 #define MENU_H
-
+const int inf = 0x3f3f3f3f;
 void wait(){
     cout << "press anything to continue... ";
     fflush(stdin);
@@ -32,14 +33,24 @@ public:
 class tLevel:public Menu{
 public:
     vector <info(*)(node*)> input;
-    void result(const info& res){
-        cout << "casos--> " << res.casos << endl;
-        cout << "obitos--> " << res.obitos << endl;
+    void result(const info& res, bool is_tend=0){
+        cout << fixed;
+        cout << "casos--> " << setprecision(2) << res.casos;
+        if(is_tend) cout << "%";
+        cout << endl;
+        cout << "obitos--> " << setprecision(2) << res.obitos;
+        if(is_tend) cout << "%";
+        cout << endl;
     }
     tLevel(const vector<info(*)(node*)> &n_input) : Menu("", vector<string>({})), input{n_input} {}
     void flow(node* local, int mode){
             display();
-            result(input[mode-1](local));
+            info candidate = input[mode-1](local);
+            if(candidate.casos == -1 && candidate.obitos == inf){
+                cout << "\nInvalid option! " << endl;
+                return;
+            }
+            result(candidate, mode==3);
     }
 };
 
