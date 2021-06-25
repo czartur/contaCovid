@@ -92,6 +92,8 @@ public:
                 cout << "Local não encontrado, tentar novamente?(s/n) ";
                 cin >> inp;
                 if(inp == "n") break;
+                fflush(stdin);
+                getc(stdin);
             }
         }while(inp != "0");
     }
