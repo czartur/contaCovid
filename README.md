@@ -7,7 +7,7 @@
 * Explicar os inputs permitidos (com os constraints)
 
 ## SUGESTÕES:
-* Fazer um MENU descente! 
+* Fazer um MENU desente*! 
 * Aprimorar o sistema de pesquisa de locais
 * Aceitar tambem inputs quase certos (??)
 * Criar um sistema de navegação pelos dados
