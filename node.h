@@ -8,9 +8,10 @@ using namespace std;
 #define NODE_H
 
 class node{
+	vector <node*> sub;
+	vector <info> dados;
 public:
-    vector <node*> sub;
-    vector <info> dados;
+    
     string name;
     int population;
     node(string n_name, int n_population=0): name{n_name}, population{n_population}{}
@@ -50,23 +51,26 @@ public:
             }
         }
     }
+    friend node* search(string& name, node* cur);
 };
 node* search(string& name, node* cur){
     if(cur->getname() == name) return cur;
-    /*
+    
     //cout << cur->getname() << endl;
     vector <node*>::iterator it;
-    for (it = cur->getsub().begin(); it != cur->getsub().end(); it++) {
+    //for (it = cur->getsub().begin(); it != cur->getsub().end(); it++) {
+    for (it = cur->sub.begin(); it != cur->sub.end(); it++) {
         //cout << (*it)->getname() << endl;
         node* aux = search(name, *it); 
         if (aux) return aux;
     }
-    */
+    
+    /*
     for(int i=0; i<cur->getsub().size(); i++){
         node* aux = search(name, cur->getsub()[i]);
         if(aux) return aux;
     }
-    
+    */
     return nullptr;
 }
 #endif
