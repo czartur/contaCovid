@@ -10,9 +10,10 @@ using namespace std;
 class node{
 	vector <node*> sub;
 	vector <info> dados;
+    string name;
 public:
     
-    string name;
+    
     int population;
     node(string n_name, int n_population=0): name{n_name}, population{n_population}{}
     ~node(){ for(auto p:sub) delete p; }

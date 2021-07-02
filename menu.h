@@ -65,7 +65,7 @@ public:
     void flow(node* local, int mode){
         display();
         if(mode == 4){
-            if(local->sub.empty()){
+            if(local->getsub().empty()){
                 cout << "Por favor, selecione um estado ou país para essa opção!" << endl;
                 return;
             }
@@ -79,8 +79,8 @@ public:
                 return;
             }
             vector<pair<double, node*>> rank;
-            for(auto p:local->sub){
-                if(p->name == "Outras") continue;
+            for(auto p:local->getsub()){
+                if(p->getname() == "Outras") continue;
                 rank.push_back({inpTOres(p, candidate, rankopcao).getcasos(), p});
             }
             sort(rank.begin(), rank.end());
@@ -90,10 +90,18 @@ public:
                 cout << rank.end()-it + 1 << ". " << (*it).second->name << "\n";
             }
             */
-            cout << fixed; 
-            for(int i=rank.size()-1; i>=0; i--){
-                cout << rank.size()-i << ". " << rank[i].second->name << " [" << setprecision(2) << rank[i].first << "]\n";
+            cout << fixed;
+            /*
+            vector<pair<double, node*>>::iterator it;
+            for(it=rank.end(); it!=rank.begin(); it--){
+                cout << rank.end() - it + 1 << ". "  << ((*it).second)->getname() << " [" << setprecision(2) << (*it).first << "]\n";
             }
+            */
+            
+            for(int i=rank.size()-1; i>=0; i--){
+                cout << rank.size()-i << ". " << rank[i].second->getname() << " [" << setprecision(2) << rank[i].first << "]\n";
+            }
+            
             cout << endl;
         }
         else{
