@@ -43,6 +43,7 @@ public:
 
     void fix(){
         for(auto f:sub){
+            population+=f->population;
             for(int i=0; i<f->dados.size(); i++){
                 if((int)dados.size()-1 < i) dados.push_back(f->dados[i]);
                 else {
