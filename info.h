@@ -2,6 +2,7 @@
 #define INFO_H
 
 class info{
+private:
     double casos, obitos;
 public:
     double getcasos() const{

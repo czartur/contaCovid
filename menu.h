@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include "node.h"
@@ -24,7 +25,7 @@ public:
         system("clear");
         cout << header << endl;
         for(int i=0; i<opcoes.size(); i++){
-            cout << opcoes[i] << "\n";
+            cout << i << ". " << opcoes[i] << "\n";
         }
         if(opcoes.size()) cout << endl;
     }
@@ -32,7 +33,7 @@ public:
 
 class tLevel:public Menu{
 public:
-    vector <info(*)(node*)> input;
+    vector <vector<int>(*)(node*)> input;
     void result(const info& res, bool is_tend=0){
         cout << fixed;
         cout << "casos--> " << setprecision(2) << res.getcasos();
@@ -42,15 +43,67 @@ public:
         if(is_tend) cout << "%";
         cout << endl;
     }
-    tLevel(const vector<info(*)(node*)> &n_input) : Menu("", vector<string>({})), input{n_input} {}
+    info inpTOres(node*local, vector<int> &candidate, int mode){
+        info res;
+        switch (mode)
+        {
+        case 1:
+            res = local->total(candidate[0], candidate[1]);
+            break;
+        case 2:
+            res = local->media(candidate[0], candidate[1]);
+            break;
+        case 3:
+            res = local->tendencia(candidate[0], candidate[1], candidate[2]);
+            break;
+        default: 
+            break;
+        }
+        return res;
+    }
+    tLevel(const vector<vector<int>(*)(node*)> &n_input) : Menu("", vector<string>({})), input{n_input} {}
     void flow(node* local, int mode){
-            display();
-            info candidate = input[mode-1](local);
-            if(candidate.getcasos() == -1 && candidate.getobitos() == inf){
+        display();
+        if(mode == 4){
+            if(local->sub.empty()){
+                cout << "Por favor, selecione um estado ou país para essa opção!" << endl;
+                return;
+            }
+            int rankopcao;
+            cout << "0. Voltar\n1. [rank] Total\n2. [rank] Media\n3. [rank] Tendencia" << endl;
+            cin >> rankopcao;
+            if(!rankopcao) return;
+            vector<int> candidate = input[rankopcao-1](local);
+            if(candidate.empty()){
                 cout << "\nInvalid option! " << endl;
                 return;
             }
-            result(candidate, mode==3);
+            vector<pair<double, node*>> rank;
+            for(auto p:local->sub){
+                if(p->name == "Outras") continue;
+                rank.push_back({inpTOres(p, candidate, rankopcao).getcasos(), p});
+            }
+            sort(rank.begin(), rank.end());
+            /*
+            vector<pair<double, node*>>::iterator it;
+            for(it=rank.end(); it!=rank.begin(); it--){
+                cout << rank.end()-it + 1 << ". " << (*it).second->name << "\n";
+            }
+            */
+            cout << fixed; 
+            for(int i=rank.size()-1; i>=0; i--){
+                cout << rank.size()-i << ". " << rank[i].second->name << " [" << setprecision(2) << rank[i].first << "]\n";
+            }
+            cout << endl;
+        }
+        else{
+            vector<int> candidate = input[mode-1](local);
+            if(candidate.empty()){
+                cout << "\nInvalid option! " << endl;
+                return;
+            }
+            result(inpTOres(local, candidate, mode), mode==3);
+        }
     }
 };
 
@@ -60,7 +113,6 @@ public:
     void flow(node* local, tLevel m3){
         int inp;
         do{ 
-            string subheader[3] = {"Total", "Media", "Tendencia"}; 
             display();
             cin >> inp;
             if(inp == 0) {
@@ -68,9 +120,9 @@ public:
                 getc(stdin);
                 break;
             }
-            else if(inp > 3 || inp<0) cout << "Invalid option! " << endl;
+            else if(inp > opcoes.size()-1 || inp<0) cout << "Invalid option! " << endl;
             else {
-                m3.header = ">> " + local->getname() + " (" + subheader[inp-1] + ") <<";
+                m3.header = ">> " + local->getname() + " (" + opcoes[inp] + ") <<";
                 m3.flow(local, inp);
             }
             wait();
