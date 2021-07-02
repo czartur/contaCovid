@@ -9,10 +9,11 @@ using namespace std;
 
 class node{
 public:
-    vector <info> dados;
     vector <node*> sub;
+    vector <info> dados;
     string name;
-    node(string n_name): name{n_name} {}
+    int population;
+    node(string n_name, int n_population=0): name{n_name}, population{n_population}{}
     ~node(){ for(auto p:sub) delete p; }
     info total(int inicio, int fim){
         fim--, inicio--;
@@ -31,6 +32,11 @@ public:
         return (m_fim-m_inicio)/m_inicio;
     }
 
+    vector<node*> getsub(){ return sub; }
+    vector<info> getdados(){ return dados; }
+    string getname(){ return name; }
+    int getpopulation(){ return population; }
+
     void addsub(node* novo){ sub.push_back(novo); }
     void adddados(info &novo){ dados.push_back(novo); }
 
@@ -45,19 +51,22 @@ public:
         }
     }
 };
-node* search(string name, node* cur){
-    if(cur->name == name) return cur;
-    vector <node*>::const_iterator it;
-    for (it = cur->sub.begin(); it != cur->sub.end(); it++) {
+node* search(string& name, node* cur){
+    if(cur->getname() == name) return cur;
+    /*
+    //cout << cur->getname() << endl;
+    vector <node*>::iterator it;
+    for (it = cur->getsub().begin(); it != cur->getsub().end(); it++) {
+        //cout << (*it)->getname() << endl;
         node* aux = search(name, *it); 
         if (aux) return aux;
     }
-    /*
-    for(int i=0; i<cur->sub.size(); i++){
-        node* aux = search(name, cur->sub[i]);
+    */
+    for(int i=0; i<cur->getsub().size(); i++){
+        node* aux = search(name, cur->getsub()[i]);
         if(aux) return aux;
     }
-    */
+    
     return nullptr;
 }
 #endif

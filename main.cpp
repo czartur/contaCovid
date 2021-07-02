@@ -48,7 +48,7 @@ info inp_total(node* local){
     cin >> inp;
     fim = dateTOint(inp);
     //cout << inicio << " " << fim << endl;
-    if(inicio==-1 || fim==-1 || fim<inicio || fim>local->dados.size()) return info(-1,inf);
+    if(inicio==-1 || fim==-1 || fim<inicio || fim>local->getdados().size()) return info(-1,inf);
     return local->total(inicio, fim);
 }
 info inp_media(node* local){
@@ -60,7 +60,7 @@ info inp_media(node* local){
     cout << "Janela [numero]: ";
     cin >> inp;
     janela = strTOint(inp);
-    if(janela==-1 || janela==0 || dia-janela+1 <= 0 || dia>local->dados.size()) return info(-1,inf);
+    if(janela==-1 || janela==0 || dia-janela+1 <= 0 || dia>local->getdados().size()) return info(-1,inf);
     return local->media(dia, janela);
 }
 info inp_tendencia(node* local){
@@ -75,7 +75,7 @@ info inp_tendencia(node* local){
     cout << "Janela [numero]: ";
     cin >> inp;
     janela = strTOint(inp);
-    if(janela==-1 || janela==0 || fim<inicio || inicio-janela+1 <=0 || fim>local->dados.size()) return info(-1,inf);
+    if(janela==-1 || janela==0 || fim<inicio || inicio-janela+1 <=0 || fim>local->getdados().size()) return info(-1,inf);
     return local->tendencia(inicio, fim, janela);
 }
 
@@ -96,15 +96,15 @@ bool fetchData(node** pais){
         splited = splitline(line);
         if(splited[E].empty()) continue; //dados irrelevantes ou redundantes possuem a coluna E vazia
         if(splited[C].empty()) splited[C] = "Outras";
-        if((estado == nullptr) || (estado!=nullptr)&&(estado->name != splited[B])){
+        if((estado == nullptr) || (estado!=nullptr)&&(estado->getname() != splited[B])){
             if(estado) estado->fix();
             (*pais)->addsub(new node(splited[B]));
-            estado = (*pais)->sub[estadon++];
+            estado = (*pais)->getsub()[estadon++];
             municipion=0;
         }
-        if((municipio == nullptr) || (municipio!=nullptr)&&(municipio->name != splited[C])){
+        if((municipio == nullptr) || (municipio!=nullptr)&&(municipio->getname() != splited[C])){
             estado->addsub(new node(splited[C]));
-            municipio = estado->sub[municipion++];
+            municipio = estado->getsub()[municipion++];
         }
         info novo_dado(strTOint(splited[K]), strTOint(splited[M]));
         municipio->adddados(novo_dado);

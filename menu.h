@@ -70,7 +70,7 @@ public:
             }
             else if(inp > 3 || inp<0) cout << "Invalid option! " << endl;
             else {
-                m3.header = ">> " + local->name + " (" + subheader[inp-1] + ") <<";
+                m3.header = ">> " + local->getname() + " (" + subheader[inp-1] + ") <<";
                 m3.flow(local, inp);
             }
             wait();
@@ -89,7 +89,7 @@ public:
             getline(cin, inp);
             node* local = search(inp, head); 
             if(local) {
-                m2.header = ">> " + local->name + " <<";
+                m2.header = ">> " + local->getname() + " <<";
                 m2.flow(local, m3);
             }
             else{
