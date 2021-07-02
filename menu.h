@@ -35,10 +35,10 @@ public:
     vector <info(*)(node*)> input;
     void result(const info& res, bool is_tend=0){
         cout << fixed;
-        cout << "casos--> " << setprecision(2) << res.casos;
+        cout << "casos--> " << setprecision(2) << res.getcasos();
         if(is_tend) cout << "%";
         cout << endl;
-        cout << "obitos--> " << setprecision(2) << res.obitos;
+        cout << "obitos--> " << setprecision(2) << res.getobitos();
         if(is_tend) cout << "%";
         cout << endl;
     }
@@ -46,7 +46,7 @@ public:
     void flow(node* local, int mode){
             display();
             info candidate = input[mode-1](local);
-            if(candidate.casos == -1 && candidate.obitos == inf){
+            if(candidate.getcasos() == -1 && candidate.getobitos() == inf){
                 cout << "\nInvalid option! " << endl;
                 return;
             }

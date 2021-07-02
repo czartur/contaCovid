@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <iterator>
 #include "info.h"
 using namespace std;
 
@@ -19,8 +20,8 @@ public:
     }
     info media(int dia, int janela){
         dia--;
-        double casos = (double) (dados[dia].casos-dados[dia-janela].casos)/((double)janela);
-        double obitos = (double) (dados[dia].obitos-dados[dia-janela].obitos)/((double)janela);
+        double casos = (double) (dados[dia].getcasos()-dados[dia-janela].getcasos())/((double)janela);
+        double obitos = (double) (dados[dia].getobitos()-dados[dia-janela].getobitos())/((double)janela);
         return (dados[dia]-dados[dia-janela])/info(janela, janela);
     }
     info tendencia(int inicio, int fim, int janela){
@@ -46,10 +47,17 @@ public:
 };
 node* search(string name, node* cur){
     if(cur->name == name) return cur;
+    vector <node*>::const_iterator it;
+    for (it = cur->sub.begin(); it != cur->sub.end(); it++) {
+        node* aux = search(name, *it); 
+        if (aux) return aux;
+    }
+    /*
     for(int i=0; i<cur->sub.size(); i++){
         node* aux = search(name, cur->sub[i]);
         if(aux) return aux;
     }
+    */
     return nullptr;
 }
 #endif
