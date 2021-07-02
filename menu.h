@@ -31,7 +31,7 @@ public:
     }
 };
 
-class tLevel:public Menu{
+class tLevel:public Menu{ //to do next --> exceptions
 public:
     vector <vector<int>(*)(node*)> input;
     void result(const info& res, bool is_tend=0){
@@ -71,8 +71,10 @@ public:
             }
             int rankopcao;
             cout << "0. Voltar\n1. [rank] Total\n2. [rank] Media\n3. [rank] Tendencia" << endl;
+            //HERE
             cin >> rankopcao;
             if(!rankopcao) return;
+            //HERE
             vector<int> candidate = input[rankopcao-1](local);
             if(candidate.empty()){
                 cout << "\nInvalid option! " << endl;
@@ -106,8 +108,7 @@ public:
         }
     }
 };
-
-class sLevel:public Menu{
+class sLevel:public Menu{ //to do next--> exceptions
 public:
     sLevel(const vector<string> &n_opcoes) : Menu("", n_opcoes) {}
     void flow(node* local, tLevel m3){
@@ -115,6 +116,7 @@ public:
         do{ 
             display();
             cin >> inp;
+            //HERE
             if(inp == 0) {
                 fflush(stdin);
                 getc(stdin);
