@@ -63,13 +63,9 @@ void tLevel::flow(node* local, int mode){
         cin >> rankopcao;
         try {
             if (!rankopcao) throw 0;
-			//HERE
+            if (rankopcao < 0 || 3 < rankopcao) throw 1;
 			vector<int> candidate = input[rankopcao - 1](local);
-            if (candidate.empty()) throw 1;
-            //{
-				//cout << "\nInvalid option! " << endl;
-				//return;
-			//}
+            if (candidate.empty()) throw 2;
 			vector<pair<double, node*>> rank;
 			for (auto p : local->getsub()) {
 				if (p->getname() == "Outras") continue;
@@ -89,6 +85,10 @@ void tLevel::flow(node* local, int mode){
         catch (int e) {
             if (e == 0) return;
             if (e == 1) {
+				cout << "\nInvalid option! " << endl;
+				return;
+            }
+            if (e == 2) {
 				cout << "\nInvalid option! " << endl;
 				return;
             }
