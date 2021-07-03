@@ -61,6 +61,40 @@ void tLevel::flow(node* local, int mode){
         cout << "0. Voltar\n1. by Total\n2. by Media\n3. by Tendencia" << endl;
         //HERE
         cin >> rankopcao;
+        try {
+            if (!rankopcao) throw 0;
+			//HERE
+			vector<int> candidate = input[rankopcao - 1](local);
+            if (candidate.empty()) throw 1;
+            //{
+				//cout << "\nInvalid option! " << endl;
+				//return;
+			//}
+			vector<pair<double, node*>> rank;
+			for (auto p : local->getsub()) {
+				if (p->getname() == "Outras") continue;
+				if (mode == 4) rank.push_back({ inpTOres(p, candidate, rankopcao).getcasos(), p });
+				else rank.push_back({ inpTOres(p, candidate, rankopcao).getobitos(), p });
+			}
+			sort(rank.begin(), rank.end());
+			cout << fixed;
+
+			for (int i = rank.size() - 1; i >= 0; i--) {
+				cout << rank.size() - i << ". " << rank[i].second->getname() << " com [" << setprecision(2) << rank[i].first;
+				if (rankopcao == 3) cout << "%";
+				cout << "]\n";
+			}
+			cout << endl;
+        }
+        catch (int e) {
+            if (e == 0) return;
+            if (e == 1) {
+				cout << "\nInvalid option! " << endl;
+				return;
+            }
+        }
+
+        /*
         if(!rankopcao) return;
         //HERE
         vector<int> candidate = input[rankopcao-1](local);
@@ -83,6 +117,7 @@ void tLevel::flow(node* local, int mode){
             cout << "]\n";
         }
         cout << endl;
+        */
     }
     else{
         vector<int> candidate = input[mode-1](local);

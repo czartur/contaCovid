@@ -25,7 +25,7 @@ public:
     }
 };
 
-class tLevel:public Menu{ //to do next --> exceptions
+class tLevel:public Menu{ 
 public:
     vector <vector<int>(*)(node*)> input;
     tLevel(const vector<vector<int>(*)(node*)> &n_input) : Menu("", vector<string>({})), input{n_input} {}
@@ -34,7 +34,7 @@ public:
     void flow(node* loval, int mode);
 };
 
-class sLevel:public Menu{ //to do next--> exceptions
+class sLevel:public Menu{ 
 public:
     sLevel(const vector<string> &n_opcoes) : Menu("", n_opcoes) {}
     void flow(node* local, tLevel m3);
