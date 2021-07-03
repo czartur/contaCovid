@@ -119,59 +119,10 @@ int main(){
     node* pais = new node("Brasil");
     if(fetchData(&pais)) return 1;
 
-    /*
-    string name;
-    cin >> name;
-    if(search(name, pais)) cout << "found :)" << endl;
-    else cout << "not found :(" << endl;
-    */
-
-    
     pLevel m0("### Covid-19 (database) ###\n");
-    sLevel m1(vector<string>({"Voltar", "Total", "Média móvel", "Tendência", "Ranking"}));
+    sLevel m1(vector<string>({"Voltar", "Total", "Média móvel", "Tendência", "Ranking (casos)", "Ranking (obitos)"}));
     tLevel m2(vector<vector<int>(*)(node*)>({inp_total, inp_media, inp_tendencia}));
     m0.flow(pais, m1, m2);
     
     delete pais;
 }
-//naive menu sketch
-    /*
-    string local;
-    do{
-        system("clear");
-        cout << "### Covid-19 (online database) ###\n" << endl;
-        cout << "Escolha o local (0 para sair): ";
-        cin >> local;
-        if(local == "0") continue;
-        node* cur = search(local, pais);
-        if(cur == nullptr) cout << "local não encontrado..." << endl;
-        else{
-            int choice;
-            do{
-                system("clear");
-                cout << ">> " << cur->name << " <<\n\n";
-                cout << "0. Voltar\n";
-                cout << "1. Total de casos\n";
-                cout << "2. Media movel\n";
-                cout << "3. Tendencia de crescimento\n" << endl;
-                cin >> choice;
-                switch (choice) 
-                {
-                case 1:
-                    cout << "opção 1" << endl;
-                    break;
-                case 2:
-                    cout << "opção 2" << endl;
-                    break;
-                case 3:
-                    cout << "opção 3" << endl;
-                    break;
-                default:
-                    break;
-                }
-                pausa(2);
-            }while(choice!=0);
-        }
-        pausa(1);
-    }while(local!="0");
-    */
