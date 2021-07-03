@@ -35,6 +35,7 @@ void sLevel::flow(node* local, tLevel m3){
     do{ 
         display();
         cin >> inp;
+        
         try {
             if (inp == 0) throw 0; 	
             if (inp > opcoes.size() - 1 || inp < 0) throw 1;
@@ -53,6 +54,7 @@ void sLevel::flow(node* local, tLevel m3){
                 cout << "Invalid option! " << endl;
             }
         }
+               
         wait();
     }while(inp != 0);
 }

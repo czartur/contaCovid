@@ -47,27 +47,3 @@ public:
 }; 
 
 #endif 
-
-// >>ESBOÇO<<
-
-// # Menu 0 (p)
-// Escolher um local (ou sair)
-
-//# Menu 1 (s)
-// 0. voltar
-// 1. total de casos
-// 2. media movel
-// 3. tedencia
-// 4. ranking
-
-//# Menu 2.1 (t)
-// Escoher 2 datas (ou voltar)
-// --> resultado
-
-//# Menu 2.2 (t)
-// Escolher 1 data e 1 janela (ou voltar)
-// --> resultado
-
-//# Menu 2.3 (t)
-// Escolher 2 datas e 1 janela (ou voltar)
-// --> resultado

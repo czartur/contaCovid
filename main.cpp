@@ -47,7 +47,6 @@ vector<int> inp_total(node* local){
     cout << "Data de fim [DDMM]: ";
     cin >> inp;
     fim = dateTOint(inp);
-    //cout << inicio << " " << fim << endl;
     if(inicio==-1 || fim==-1 || fim<inicio || fim>local->getdados().size()) return vector<int>();
     return vector<int>({inicio, fim});
 }
