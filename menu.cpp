@@ -35,16 +35,23 @@ void sLevel::flow(node* local, tLevel m3){
     do{ 
         display();
         cin >> inp;
-        //HERE
-        if(inp == 0) {
-            fflush(stdin);
-            getc(stdin);
-            break;
+        try {
+            if (inp == 0) throw 0; 	
+            if (inp > opcoes.size() - 1 || inp < 0) throw 1;
+			
+			m3.header = ">> " + local->getname() + " (" + opcoes[inp] + ") <<";
+			m3.flow(local, inp);
+			
         }
-        else if(inp > opcoes.size()-1 || inp<0) cout << "Invalid option! " << endl;
-        else {
-            m3.header = ">> " + local->getname() + " (" + opcoes[inp] + ") <<";
-            m3.flow(local, inp);
+        catch (int e) {
+            if (e == 0) {
+				fflush(stdin);
+				getc(stdin);
+				break;
+            }
+            if (e == 1) {
+                cout << "Invalid option! " << endl;
+            }
         }
         wait();
     }while(inp != 0);
@@ -59,7 +66,6 @@ void tLevel::flow(node* local, int mode){
         }
         int rankopcao;
         cout << "0. Voltar\n1. by Total\n2. by Media\n3. by Tendencia" << endl;
-        //HERE
         cin >> rankopcao;
         try {
             if (!rankopcao) throw 0;
@@ -94,30 +100,7 @@ void tLevel::flow(node* local, int mode){
             }
         }
 
-        /*
-        if(!rankopcao) return;
-        //HERE
-        vector<int> candidate = input[rankopcao-1](local);
-        if(candidate.empty()){
-            cout << "\nInvalid option! " << endl;
-            return;
-        }
-        vector<pair<double, node*>> rank;
-        for(auto p:local->getsub()){
-            if(p->getname() == "Outras") continue;
-            if(mode == 4) rank.push_back({inpTOres(p, candidate, rankopcao).getcasos(), p});
-            else rank.push_back({inpTOres(p, candidate, rankopcao).getobitos(), p});
-        }
-        sort(rank.begin(), rank.end());
-        cout << fixed;
         
-        for(int i=rank.size()-1; i>=0; i--){
-            cout << rank.size()-i << ". " << rank[i].second->getname() << " com [" << setprecision(2) << rank[i].first;
-            if(rankopcao == 3) cout << "%";
-            cout << "]\n";
-        }
-        cout << endl;
-        */
     }
     else{
         vector<int> candidate = input[mode-1](local);
