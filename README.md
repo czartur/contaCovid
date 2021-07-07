@@ -1,5 +1,7 @@
 # Covid DATABASE
 
+DUPLA: Matheus Almeida - 19047 e Artur César - 19006
+
 ## Brief explanation
 
 1. Total: usuário entra com *duas datas* e obtem o total de casos/óbitos por covid dentro dessa janela de tempo
